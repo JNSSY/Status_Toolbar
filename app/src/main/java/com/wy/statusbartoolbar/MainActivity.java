@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private StatusBarUtils barUtils;
     private View view_status;
     private TextView tv_title;
+    private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,21 +28,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         scrollview = findViewById(R.id.scrollview);
         view_status = findViewById(R.id.view_status);
+        iv_back = findViewById(R.id.iv_back);
         tv_title = findViewById(R.id.tv_title);
         ll_toolbar = findViewById(R.id.ll_toolbar);
         iv = findViewById(R.id.iv);
+        view_status = findViewById(R.id.view_status);
 
-        barUtils = new StatusBarUtils(getWindow(), scrollview, ll_toolbar, tv_title,iv, true);
+        barUtils = new StatusBarUtils(this, scrollview, view_status,ll_toolbar, iv_back, tv_title, iv, true);
         barUtils.setStatusBarColor(getResources().getColor(R.color.white), 0, 133, 119);
 
-        view_status = findViewById(R.id.view_status);
-        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) view_status.getLayoutParams();
-        linearParams.height = barUtils.getStatusBarHeight(this.getBaseContext());
-        view_status.setLayoutParams(linearParams);
+
 
 
     }
-
 
 
 }

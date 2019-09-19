@@ -1,12 +1,17 @@
 package com.wy.lib;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.M)
@@ -15,18 +20,28 @@ public class StatusBarUtils {
     private Window window;
     private YWScrollView scrollView;
     private View toolbar;
+    private View view_status;
+    private ImageView iv_back;
     private View title;
     private View view;
+    private Activity activity;
+    private Bitmap bitmap_gray,bitmap_white;
     private boolean translucent_navigation;
 
-    public StatusBarUtils(Window window, YWScrollView scrollView, View toolbar, View title, View view, boolean translucent_navigation) {
-        this.window = window;
+    public StatusBarUtils(Activity activity, YWScrollView scrollView,View view_status, View toolbar, ImageView iv_back, View title, View view, boolean translucent_navigation) {
+        this.activity = activity;
+        this.window = activity.getWindow();
         this.scrollView = scrollView;
+        this.view_status = view_status;
         this.toolbar = toolbar;
+        this.iv_back = iv_back;
         this.title = title;
         this.view = view;
         this.translucent_navigation = translucent_navigation;
         transparencyBar();
+        setStatus();
+        bitmap_gray = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.icon_left_arrow_gray);
+        bitmap_white = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.icon_left_arrow);
     }
 
 
@@ -53,13 +68,15 @@ public class StatusBarUtils {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         window.setStatusBarColor(initColor);
                     }
-                    ((TextView)title).setTextColor(Color.GRAY);
+                    ((TextView) title).setTextColor(Color.GRAY);
+                    iv_back.setImageBitmap(bitmap_gray);
                     toolbar.setBackgroundColor(initColor);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         window.setStatusBarColor(Color.argb(255 - mAlpha, finalR, finalG, finalB));
                     }
-                    ((TextView)title).setTextColor(Color.WHITE);
+                    ((TextView) title).setTextColor(Color.WHITE);
+                    iv_back.setImageBitmap(bitmap_white);
                     toolbar.setBackgroundColor(Color.argb(255 - mAlpha, finalR, finalG, finalB));
                 }
 
@@ -113,5 +130,11 @@ public class StatusBarUtils {
         } else {
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
+    }
+
+    private void setStatus(){
+        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) view_status.getLayoutParams();
+        linearParams.height = getStatusBarHeight(activity.getBaseContext());
+        view_status.setLayoutParams(linearParams);
     }
 }
